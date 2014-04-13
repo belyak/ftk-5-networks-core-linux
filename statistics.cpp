@@ -1,0 +1,73 @@
+#include "statistics.h"
+#include "persistent_statistics.h"
+
+#include <list>
+#include <iostream>
+#include <string>
+
+using std::wstring;
+using std::wcout;
+
+const wstring * Statistics::LETTERS =
+		new wstring(L"ABCEDFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя");
+
+Statistics::Statistics(PersistentStatistics& storage) {
+	words_count = 0;
+	lines_count = 0;
+	this->storage = (PersistentStatistics*) (&storage);
+}
+
+void Statistics::putLine(const char * line) {
+	std::string * line_s = new std::string(line);
+	wstring * s = new wstring();
+	s->assign(line_s->begin(), line_s->end());
+	lines.push_back(*s);
+	lines_count += 1;
+}
+
+void Statistics::clearBuffer() {
+	this->lines.clear();
+	this->data.clear();
+}
+
+void Statistics::putWord(wstring word) {
+	if (this->data.find(word) == this->data.end()) {
+		this->data[word] = 1;
+	} else {
+		this->data[word]++;
+	}
+}
+
+void Statistics::calculate() {
+
+	for (StringList::iterator i = this->lines.begin(); i != this->lines.end(); i++) {
+		wstring & line = *i;
+		wstring::size_type word_start = 0;
+		std::wstring::size_type pos = line.find_first_not_of(*this->LETTERS, 0);
+
+		while (pos != wstring::npos) {
+			const wstring word(line.substr(word_start, pos - word_start));
+			putWord(word);
+			word_start = line.find_first_of(*this->LETTERS, pos);
+			pos = line.find_first_not_of(*this->LETTERS, word_start);
+		}
+
+		if (word_start != wstring::npos) {
+			const wstring word(line.substr(word_start));
+			putWord(word);
+		}
+	}
+
+	wcout << L"STATISTICS:" << endl;
+	for (StatisticsMap::iterator i = this->data.begin(); i != this->data.end(); i++) {
+		StatisticsEntry entry = *i;
+		wcout << entry.first << L": " << entry.second << endl;
+	}
+}
+
+void Statistics::dumpLines() {
+	wcout << L"Current lines dump:" << endl;
+	for (StringList::iterator i = lines.begin(); i != lines.end(); i++) {
+		wcout << *i << endl;
+	}
+}
