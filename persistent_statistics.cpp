@@ -18,16 +18,21 @@ void PersistentStatistics::setName(std::wstring name) {
 }
 
 const char * PersistentStatistics::get_filename(){
-	std::string normal_string((char*)this->name->c_str());
-	std::string filename_string = normal_string + std::string(".dat");
-	return (const char *)filename_string.c_str();
+	int name_length = this->name->length();
+	char * buff = new char[name_length];
+	buff[name_length] = 0;
+	for (int i = 0; i < name_length; i++) {
+		char * t = (char*)this->name->substr(i, i + 1).c_str();
+		buff[i] = *t;
+	}
+	std::string result_string = std::string(buff) + std::string(".dat");
+	return result_string.c_str();
 }
 
 
 bool PersistentStatistics::store(std::wstring name) {
 	this->setName(name);
 	const char * filename = this->get_filename();
-	std::wcout << L"GOING TO WRITE TO " << filename << std::endl;
 	std::wofstream output_file;
 	output_file.open(this->get_filename(), std::ios::binary | std::ios::trunc);
 
@@ -49,6 +54,9 @@ bool PersistentStatistics::load(std::wstring name) {
 	std::wcout << L"before opening..." << std::endl;
 	std::wifstream input_file;
 	input_file.open(this->get_filename(), std::ios::in | std::ios::binary);
+	if (!input_file.is_open()) {
+		return false;
+	}
 	while (input_file.eof() != true) {
 		input_file.getline(buffer, MAX_LINE_LENGTH);
 		std::wstring data(buffer);
