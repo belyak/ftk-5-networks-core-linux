@@ -4,17 +4,25 @@
 #include <list>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using std::wstring;
 using std::wcout;
+using std::endl;
 
 const wstring * Statistics::LETTERS =
 		new wstring(L"ABCEDFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя");
 
-Statistics::Statistics(PersistentStatistics& storage) {
+
+Statistics::Statistics(wstring name) {
 	words_count = 0;
 	lines_count = 0;
-	this->storage = (PersistentStatistics*) (&storage);
+	if (name.length() > 0) {
+		this->name = wstring(name);
+	} else {
+		this->name = L"current";
+	}
+	this->storage = new PersistentStatistics(this->name, this->data);
 }
 
 void Statistics::putLine(wstring line) {
@@ -68,4 +76,9 @@ void Statistics::dumpLines() {
 	for (StringList::iterator i = lines.begin(); i != lines.end(); i++) {
 		wcout << *i << endl;
 	}
+}
+
+bool Statistics::load(std::wstring name) {
+	bool loadResult = this->storage->load(name);
+	return loadResult;
 }
