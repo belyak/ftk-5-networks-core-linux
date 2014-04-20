@@ -3,7 +3,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include "lgs_types.h"
-
+#include "lgs_constants.h"
 #include "statistics.h"
 #include "persistent_statistics.h"
 
@@ -36,6 +36,10 @@ bool PersistentStatistics::store(std::wstring name) {
 	std::wofstream output_file;
 	output_file.open(this->get_filename(), std::ios::binary | std::ios::trunc);
 
+	if (!output_file.is_open()) {
+		return false;
+	}
+
 	for (StatisticsMap::iterator i = this->data->begin(); i != this->data->end(); i++) {
 		StatisticsEntry entry = *i;
 
@@ -50,8 +54,6 @@ bool PersistentStatistics::load(std::wstring name) {
 
 	wchar_t buffer[MAX_LINE_LENGTH];
 
-
-	std::wcout << L"before opening..." << std::endl;
 	std::wifstream input_file;
 	input_file.open(this->get_filename(), std::ios::in | std::ios::binary);
 	if (!input_file.is_open()) {

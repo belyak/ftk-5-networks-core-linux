@@ -5,8 +5,6 @@
 
 #include "statistics.h"
 
-#define MAX_LINE_LENGTH 2048
-
 class PersistentStatistics {
 
 public:
