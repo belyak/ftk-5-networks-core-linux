@@ -17,10 +17,8 @@ Statistics::Statistics(PersistentStatistics& storage) {
 	this->storage = (PersistentStatistics*) (&storage);
 }
 
-void Statistics::putLine(const char * line) {
-	std::string * line_s = new std::string(line);
-	wstring * s = new wstring();
-	s->assign(line_s->begin(), line_s->end());
+void Statistics::putLine(wstring line) {
+	wstring * s = new wstring(line);
 	lines.push_back(*s);
 	lines_count += 1;
 }

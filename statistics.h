@@ -36,7 +36,7 @@ public:
     static const wstring * LETTERS;
 
 	Statistics(PersistentStatistics& storage);
-	void putLine(const char * line);
+	void putLine(wstring line);
     void clearBuffer();
     void calculate();
     bool load(const char * name);
