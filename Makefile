@@ -2,7 +2,7 @@ CC = g++
 
 OUT_FILE = lgs
 
-all:	main.o statistics.o persistent_statistics.o IOAdapter.o FDIOAdapter.o lgs_constants.o
+all:	main.o statistics.o persistent_statistics.o IOAdapter.o FDIOAdapter.o lgs_constants.o socketaddr_to_str.o create_server_socket.o
 	$(CC) -o $(OUT_FILE) $^
 
 clean:	
@@ -26,3 +26,9 @@ IOAdapter.o: IOAdapter.cpp IOAdapter.h
 
 FDIOAdapter.o: FDIOAdapter.cpp FDIOAdapter.h
 	$(CC) -o FDIOAdapter.o -c FDIOAdapter.cpp
+	
+socketaddr_to_str.o: socketaddr_to_str.cpp socketaddr_to_str.h
+	$(CC) -o socketaddr_to_str.o -c socketaddr_to_str.cpp
+	
+create_server_socket.o: create_server_socket.cpp create_server_socket.h
+	$(CC) -o create_server_socket.o -c create_server_socket.cpp
