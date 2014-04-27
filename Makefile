@@ -2,7 +2,7 @@ CC = g++
 
 OUT_FILE = lgs
 
-all:	main.o statistics.o persistent_statistics.o IOAdapter.o FDIOAdapter.o lgs_constants.o socketaddr_to_str.o create_server_socket.o
+all:	main.o statistics.o persistent_statistics.o IOAdapter.o FDIOAdapter.o lgs_constants.o socketaddr_to_str.o create_server_socket.o SPI.o
 	$(CC) -o $(OUT_FILE) $^
 
 clean:	
@@ -32,3 +32,6 @@ socketaddr_to_str.o: socketaddr_to_str.cpp socketaddr_to_str.h
 	
 create_server_socket.o: create_server_socket.cpp create_server_socket.h
 	$(CC) -o create_server_socket.o -c create_server_socket.cpp
+	
+SPI.o: SPI.h SPI.cpp
+	$(CC) -o SPI.o -c SPI.cpp
