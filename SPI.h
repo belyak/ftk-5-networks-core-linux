@@ -1,6 +1,8 @@
 #ifndef SPI_H
 #define	SPI_H
 
+#include "CommandResponse.h"
+
 #include <string>
 
 #define SERVER_BANNER "Text frequency analysis server v.%s ready."
@@ -19,6 +21,7 @@ protected:
      * @param data текст сообщения
      */
     virtual void send_message(const int code, const char * data) = 0;
+        virtual void send_message(CommandResponse & response) = 0;
     /**
      * возвращает первое слово в строке, разделитель - пробел.
      */
@@ -52,6 +55,7 @@ private:
     int client_sfd; // socket file descriptor
 protected:
     virtual void send_message(const int code, const char * data);
+    virtual void send_message(CommandResponse & response);
     virtual unsigned char read_byte(bool & read_ok);
 public:
     /**

@@ -2,6 +2,7 @@
 #include "lgs_constants.h"
 #include "create_message.h"
 #include "SPICommand.h"
+#include "CommandResponse.h"
 
 #include <iostream>
 #include <string.h>
@@ -91,8 +92,8 @@ void SPI::start() {
             if (registered_commands.find(possible_command) != registered_commands.end()) {
                 SPICommand * command = registered_commands[possible_command];
                 std::cout << "going to run " << command->get_keyword() << std::endl;
-                command->run();
-                this->send_message(command->result_code, command->result_txt);
+                CommandResponse response = command->run();
+                this->send_message(response);
                 if (command->get_keyword() == exitCommand->get_keyword()) {
                     exit_called = true;
                 }
@@ -109,6 +110,11 @@ SocketSPI::~SocketSPI() { close(client_sfd); }
 void SocketSPI::send_message(const int code, const char* data) {
     char * msg = create_message(code, data);
     send(this->client_sfd, (void *) msg, strlen(msg), 0);
+}
+
+void SocketSPI::send_message(CommandResponse& response) {
+    char * msg = response.raw();
+    send(this->client_sfd, (void*) msg, strlen(msg), 0);
 }
 
 unsigned char SocketSPI::read_byte(bool& read_ok) {

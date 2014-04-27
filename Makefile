@@ -2,12 +2,15 @@ CC = g++
 
 OUT_FILE = lgs
 
-all:	SPI.o main.o statistics.o persistent_statistics.o SPICommand.o IOAdapter.o FDIOAdapter.o create_message.o lgs_constants.o commands.o socketaddr_to_str.o create_server_socket.o
+all:	SPI.o main.o statistics.o persistent_statistics.o CommandResponse.o SPICommand.o IOAdapter.o FDIOAdapter.o create_message.o lgs_constants.o commands.o socketaddr_to_str.o create_server_socket.o
 	$(CC) -o $(OUT_FILE) $^
 
 clean:	
 	rm *.o
 	rm *.h.gch
+
+CommandResponse.o: CommandResponse.cpp CommandResponse.h
+	$(CC) -o CommandResponse.o -c CommandResponse.cpp
 
 SPICommand.o: SPICommand.cpp SPICommand.h
 	$(CC) -o SPICommand.o -c SPICommand.cpp
