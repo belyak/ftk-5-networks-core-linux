@@ -29,14 +29,23 @@ SPI::~SPI() {}
 char * SPI::read_line() {
     static char buffer[MAX_LINE_LENGTH];
     bool correct_line_received = false;
+    int offset = 0;
     while (!correct_line_received) {
         memset(buffer, 0, sizeof(buffer));
-        int offset = 0;
+        offset = 0;
         bool read_successfull = true;
         int delimiter_found = false;
         while (!delimiter_found && read_successfull && offset < sizeof(buffer)) {
             
-            buffer[offset] = this->read_byte(read_successfull);
+            char byte_in = this->read_byte(read_successfull);
+            
+            if (offset == 0) {
+                if (byte_in == LINES_SEPARATOR[0] || byte_in == LINES_SEPARATOR[1]) {
+                        continue;
+                }
+            }
+            
+            buffer[offset] = byte_in;
             
             if (offset >= 2) {
                 if (buffer[offset - 1] == LINES_SEPARATOR[0]) {
@@ -68,13 +77,18 @@ std::string SPI::first_word(std::string & line) {
 
 void SPI::start() { 
     
+    Statistics statistics(L"Current");
+    
     std::map<std::string, SPICommand*> registered_commands;
     
     #define REGISTER_CMD(CMD_CLS) { SPICommand * cmd = new CMD_CLS(); \
+    cmd->set_statistics(statistics); \
     registered_commands[cmd->get_keyword()] = cmd; }
     
     REGISTER_CMD(VersionCommand);
     REGISTER_CMD(ExitCommand);
+    REGISTER_CMD(PutLineCommand);
+    REGISTER_CMD(CalcCommand);
     
     ExitCommand * exitCommand = new ExitCommand();
     
@@ -92,6 +106,7 @@ void SPI::start() {
             if (registered_commands.find(possible_command) != registered_commands.end()) {
                 SPICommand * command = registered_commands[possible_command];
                 std::cout << "going to run " << command->get_keyword() << std::endl;
+                command->set_current_line(line);
                 CommandResponse response = command->run();
                 this->send_message(response);
                 if (command->get_keyword() == exitCommand->get_keyword()) {
@@ -114,7 +129,10 @@ void SocketSPI::send_message(const int code, const char* data) {
 
 void SocketSPI::send_message(CommandResponse& response) {
     char * msg = response.raw();
-    send(this->client_sfd, (void*) msg, strlen(msg), 0);
+    int send_result = send(this->client_sfd, (void*) msg, strlen(msg), 0);
+    if (send_result == -1) {
+        perror("send");
+    }
 }
 
 unsigned char SocketSPI::read_byte(bool& read_ok) {

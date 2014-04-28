@@ -25,9 +25,9 @@
 void start_user_session_process(int server_sfd, int client_sfd) {
 	pid_t pid;
 	if ( (pid = fork()) == 0) {
+                std::locale::global(std::locale("ru_RU.UTF-8"));
 		close(server_sfd);
-		std::cout << "User session starts in 2 seconds..." << std:: endl;
-		sleep(2);
+                
                 SocketSPI * spi = new SocketSPI(client_sfd);
                 spi->start();
 		std::cout << "User session terminates in 2 seconds." << std::endl;
@@ -40,9 +40,20 @@ void start_user_session_process(int server_sfd, int client_sfd) {
 
 }
 
-int main() {
+int main(int argc, char * argv[]) {
+    
+    int port = 18002;
+    if (argc == 3) {
+        if (strcmp(argv[1], "--port") == 0) {
+            port = atoi(argv[2]);
+        }
+    } else {
+        std::cout << "argc" << argc << std::endl;
+    }
 
-    int server_sfd = create_server_socket(18002, true);
+    std::locale::global(std::locale("ru_RU.UTF-8"));
+    
+    int server_sfd = create_server_socket(port, true);
     
     
     struct sockaddr client_address;
