@@ -12,37 +12,29 @@
 #include "lgs_constants.h"
 
 
-void SPICommand::set_statistics(Statistics & statistics) {
+void SPICommand::set_statistics(Statistics& statistics) {
     this->statistics = &statistics;
 }
 
 std::string SPICommand::get_keyword() {
-    static std::string keyword("ABCCommand");
     return keyword;
 }
 
 void SPICommand::set_current_line(std::string current_line) {
-    this->current_line = current_line;
+    this->current_line = std::string(current_line);
 }
-
-void SPICommand::prepare_response() {
-    if (this->response != NULL) {
-            delete response;
-    }
-}
-
-#define RETURN_RESPONSE(r) {this->prepare_response(); this->response = r; return *this->response; }
 
 CommandResponse SPICommand::run() {
-    RETURN_RESPONSE( new CommandResponse(200, "Abstract response") );  
+    return * new CommandResponse(200, "Abstract response");  
 }
 
+/*
 CommandResponse VersionCommand::run() { 
-    RETURN_RESPONSE( new CommandResponse(200, SERVER_VERSION) );
+    return * new CommandResponse(200, SERVER_VERSION);
 }
 
 CommandResponse ExitCommand::run() {
-    RETURN_RESPONSE( new CommandResponse(200, "Good bye!") );
+    return * new CommandResponse(200, "Good bye!");
 }
 
 CommandResponse PutLineCommand::run() {
@@ -59,7 +51,7 @@ CommandResponse PutLineCommand::run() {
     int lCount = this->statistics->getLinesCount();
     char response_txt[MAX_LINE_LENGTH];
     sprintf(response_txt, "line has been collected (%d at the moment).", lCount);
-    RETURN_RESPONSE( new CommandResponse(200, response_txt) );
+    return * new CommandResponse(200, response_txt);
 }
 
 CommandResponse SaveCommand::run() {
@@ -75,7 +67,7 @@ CommandResponse SaveCommand::run() {
     this->statistics->save(name);
     char msg[MAX_LINE_LENGTH];
     sprintf(msg, "Statistics \"%s\" has been saved", rest.c_str());
-    RETURN_RESPONSE( new CommandResponse(200, msg) );
+    return * new CommandResponse(200, msg);
 }
 
 CommandResponse CalcCommand::run() {
@@ -84,5 +76,11 @@ CommandResponse CalcCommand::run() {
     int lCount = this->statistics->getLinesCount();
     int wCount = this->statistics->getWordsCount();
     sprintf(buffer, "Calculated (%d lines, %d words)", lCount, wCount);
-    RETURN_RESPONSE( new CommandResponse(200, buffer) );
+    return * new CommandResponse(200, buffer);
 }
+
+inline void SPICommand::prepare_response() {
+	// TODO - implement SPICommand::prepare_response
+	throw "Not yet implemented";
+}
+*/

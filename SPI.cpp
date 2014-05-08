@@ -10,17 +10,16 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <sys/socket.h>
+
 
 #include <map>
+#include <sstream>
 
 
-char * get_banner() {
-    static char buffer[MAX_LINE_LENGTH] = "\0";
-    if (buffer[0] == '\0') {
-        sprintf(buffer, SERVER_BANNER, SERVER_VERSION);
-    }
-    return buffer;
+std::wstring get_banner() {
+    std::wstringstream ws;
+    ws << SERVER_BANNER_P1 << SERVER_VERSION << SERVER_BANNER_P2;
+    return ws.str();
 }
 
 SPI::SPI() {}
@@ -40,7 +39,7 @@ char * SPI::read_line() {
             char byte_in = this->read_byte(read_successfull);
             
             if (offset == 0) {
-                if (byte_in == LINES_SEPARATOR[0] || byte_in == LINES_SEPARATOR[1]) {
+                if (byte_in == CRLF[0] || byte_in == CRLF[1]) {
                         continue;
                 }
             }
@@ -48,8 +47,8 @@ char * SPI::read_line() {
             buffer[offset] = byte_in;
             
             if (offset >= 2) {
-                if (buffer[offset - 1] == LINES_SEPARATOR[0]) {
-                    if (buffer[offset] == LINES_SEPARATOR[1]) {
+                if (buffer[offset - 1] == CRLF[0]) {
+                    if (buffer[offset] == CRLF[1]) {
                         delimiter_found = true;
                         correct_line_received = true;
                         buffer[offset - 1] = '\0';
@@ -84,13 +83,13 @@ void SPI::start() {
     #define REGISTER_CMD(CMD_CLS) { SPICommand * cmd = new CMD_CLS(); \
     cmd->set_statistics(statistics); \
     registered_commands[cmd->get_keyword()] = cmd; }
+//    
+//    REGISTER_CMD(VersionCommand);
+//    REGISTER_CMD(ExitCommand);
+//    REGISTER_CMD(PutLineCommand);
+//    REGISTER_CMD(CalcCommand);
     
-    REGISTER_CMD(VersionCommand);
-    REGISTER_CMD(ExitCommand);
-    REGISTER_CMD(PutLineCommand);
-    REGISTER_CMD(CalcCommand);
-    
-    ExitCommand * exitCommand = new ExitCommand();
+//    ExitCommand * exitCommand = new ExitCommand();
     
     
     // отправка приветственного сообщения
@@ -109,36 +108,9 @@ void SPI::start() {
                 command->set_current_line(line);
                 CommandResponse response = command->run();
                 this->send_message(response);
-                if (command->get_keyword() == exitCommand->get_keyword()) {
-                    exit_called = true;
-                }
+//                if (command->get_keyword() == exitCommand->get_keyword()) {
+//                    exit_called = true;
+//                }
             }
     }
-}
-
-SocketSPI::SocketSPI(int client_socket_fd) {
-    this->client_sfd = client_socket_fd;
-}
-
-SocketSPI::~SocketSPI() { close(client_sfd); }
-
-void SocketSPI::send_message(const int code, const char* data) {
-    char * msg = create_message(code, data);
-    send(this->client_sfd, (void *) msg, strlen(msg), 0);
-}
-
-void SocketSPI::send_message(CommandResponse& response) {
-    char * msg = response.raw();
-    int send_result = send(this->client_sfd, (void*) msg, strlen(msg), 0);
-    if (send_result == -1) {
-        perror("send");
-    }
-}
-
-unsigned char SocketSPI::read_byte(bool& read_ok) {
-    static char buffer[2];
-    memset((void*)buffer, 0, sizeof(buffer));
-    int code = recv(this->client_sfd, buffer, 1, 0);
-    read_ok = code != -1;
-    return buffer[0];
 }

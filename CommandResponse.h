@@ -7,12 +7,15 @@ class CommandResponse {
 private:
     bool is_multi_line;
     int code;
-    std::string line;
+    std::wstring line;
+    const std::wstring * lines;
+    unsigned int lines_count;
+    char * raw_response;
 public:
-    CommandResponse(const int code, const std::string line);
-    CommandResponse(const int code, const std::string * lines, const int lines_count);
+    CommandResponse(const int code, const std::wstring line);
+    CommandResponse(const int code, const std::wstring * lines, const unsigned int lines_count);
+    virtual ~CommandResponse();
     char * raw();
 };
 
-#endif	/* COMMANDRESPONSE_H */
-
+#endif

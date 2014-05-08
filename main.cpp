@@ -1,68 +1,94 @@
-#include <iostream>
-#include <locale>
-#include <string>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
-
-#include "socketaddr_to_str.h"
-#include "create_server_socket.h"
-#include "commands.h"
-
-#include "statistics.h"
-#include "FDIOAdapter.h"
-
-#include "SPI.h"
-#include "SPICommand.h"
-
+#include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/select.h>
-#include <errno.h>
-#include <netinet/in.h>
 
-void start_user_session_process(int server_sfd, int client_sfd) {
-	pid_t pid;
-	if ( (pid = fork()) == 0) {
-                std::locale::global(std::locale("ru_RU.UTF-8"));
-		close(server_sfd);
-                
-                SocketSPI * spi = new SocketSPI(client_sfd);
-                spi->start();
-		std::cout << "User session terminates in 2 seconds." << std::endl;
-                sleep(2);
-                delete spi;
-		exit(0);
-	} else {
-		close(client_sfd);
-	}
+#include <iostream>
+
+#include "create_server_socket.h"
+#include "socketaddr_to_str.h"
+#include "ConsoleSPI.h"
+#include "SocketSPI.h"
+
+using std::endl;
+using std::cout;
+
+void p_incorrect_arguments() {
+    cout << "Please specify mode to run or --help for getting help" << endl;
+    exit(1);    
+}
+
+void p_help() {
+    cout << "Sample usage:" << endl << endl <<
+            "xinetd mode:" << endl <<
+            "lgs --xinetd" << endl <<
+            "standalone mode:" << endl <<
+            "lgs --server" << endl;
+}
+
+void start_remote_session(int server_sfd, int client_sfd) {
+    pid_t pid;
+        if ( (pid = fork()) == 0) {
+            std::locale::global(std::locale("ru_RU.UTF-8"));
+            close(server_sfd);
+
+            SocketSPI * spi = new SocketSPI(client_sfd);
+            spi->start();
+            std::cout << "User session terminates in 2 seconds." << std::endl;
+            sleep(2);
+            delete spi;
+            exit(0);
+        } else {
+            close(client_sfd);
+        }
 
 }
 
-int main(int argc, char * argv[]) {
-    
-    int port = 18002;
-    if (argc == 3) {
-        if (strcmp(argv[1], "--port") == 0) {
-            port = atoi(argv[2]);
-        }
-    } else {
-        std::cout << "argc" << argc << std::endl;
-    }
+void start_console_mode() {
+    SPI * spi = new ConsoleSPI();
+    spi->start();
+}
 
-    std::locale::global(std::locale("ru_RU.UTF-8"));
-    
-    int server_sfd = create_server_socket(port, true);
-    
+void start_server_mode() {
+    int server_sfd = create_server_socket(18000, true);
     
     struct sockaddr client_address;
     socklen_t client_address_length = sizeof(client_address);
     while(true) {
-            int client_sfd = accept(server_sfd, &client_address, &client_address_length);
-            std::cout << "client_sfd: " << client_sfd <<" connected " << sockaddr_str(client_address) << std::endl;
-            start_user_session_process(server_sfd, client_sfd);
-            std::cout << "Continuing to listen..." << std:: endl;
+        int client_sfd = accept(server_sfd, &client_address, &client_address_length);
+        std::cout << "client with socket descriptor " << client_sfd <<
+                    " connected " << sockaddr_str(client_address) << std::endl;
+        start_remote_session(server_sfd, client_sfd);
+        std::cout << "Continuing to listen..." << std:: endl;
+    }    
+}
+
+int main(int argc, char** argv) {
+    
+    enum RunMode { XINETD, STANDALONE } runMode;
+
+    if (argc == 1) {
+        p_incorrect_arguments();
+    } else if (argc == 2) {
+        if (argv[1] == "--help") {
+            void p_help();
+        } else if (strcmp(argv[1], "--xinetd") == 0) {
+            runMode = XINETD;
+        } else if (strcmp(argv[1], "--server") == 0) {
+            runMode = STANDALONE;
+        } else {
+            p_incorrect_arguments();
+        }
+    } else {
+        p_incorrect_arguments();
     }
+    
+    if (runMode == XINETD) {
+        start_console_mode();
+    } else if (runMode == STANDALONE) {
+        start_server_mode();
+    }
+    
     return 0;
 }
+

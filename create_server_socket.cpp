@@ -6,6 +6,12 @@
 
 #include <iostream>
 
+/**
+ * 
+ * @param port порт для клиентских соединений
+ * @param is_blocking блокирующий режим сокета
+ * @return дескриптор сокета либо -1 в случае ошибки
+ */
 int create_server_socket(int port, bool is_blocking) {
 	struct sockaddr_in server_address_in;
 

@@ -1,27 +1,29 @@
 #ifndef SPI_H
 #define	SPI_H
 
+#include "Statistics.h"
 #include "CommandResponse.h"
 
 #include <string>
 
-#define SERVER_BANNER "Text frequency analysis server v.%s ready."
-#define SERVER_VERSION "0.02"
-
-/*
- * Server Protocol Interpreter
- * базовый класс для интерпретатора взаимдействующего с сокетом и 
- * интерпретатора взаимодействующего со стандартным вводом/выводом
+/**
+ * Реализует логику взаимодействия с клиентом, не зависящую от типа ввода/вывода.
+ * 
+ * Два унаследованных класса - две реализации:
+ * SocketSPI - ввод/вывод в дескриптор сокета
+ * ConsoleSPI - ввод/вывод на стандартные ввод/вывод
+ *  
  */
 class SPI {
 protected:
+    Statistics statistics;
     /**
      * отправляет клиенту сообщение
      * @param code код
      * @param data текст сообщения
      */
-    virtual void send_message(const int code, const char * data) = 0;
-        virtual void send_message(CommandResponse & response) = 0;
+    virtual void send_message(const int code, std::wstring data) = 0;
+    virtual void send_message(CommandResponse & response) = 0;
     /**
      * возвращает первое слово в строке, разделитель - пробел.
      */
@@ -43,28 +45,8 @@ public:
     /**
      * запуск интерпретатора
      */
-    virtual void start();
+    void start();
 
 };
 
-/***
- * Реализация SPI взаимодействующая с сокетом.
- */
-class SocketSPI: public SPI {
-private:
-    int client_sfd; // socket file descriptor
-protected:
-    virtual void send_message(const int code, const char * data);
-    virtual void send_message(CommandResponse & response);
-    virtual unsigned char read_byte(bool & read_ok);
-public:
-    /**
-     * конструктор
-     * @param client_socket_fd открытый сокет входящего клиентского соединения
-     */
-    SocketSPI(int client_socket_fd);
-    ~SocketSPI();
-};
-
-#endif	/* SPI_H */
-
+#endif
