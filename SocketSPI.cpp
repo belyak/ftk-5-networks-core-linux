@@ -15,17 +15,17 @@ SocketSPI::~SocketSPI() {
     close(client_sfd); 
 }
 
-void SocketSPI::send_message(const int code, const char* data) {
-    char * msg = create_message(code, data);
+void SocketSPI::send_message(const int code, wstring data) {
+    char * msg = create_message(code, encoder.decode(data).c_str());
     send(this->client_sfd, (void *) msg, strlen(msg), 0);
 }
 
 void SocketSPI::send_message(CommandResponse& response) {
-    char * msg = response.raw();
-    int send_result = send(this->client_sfd, (void*) msg, strlen(msg), 0);
-    if (send_result == -1) {
-        perror("send");
-    }
+//    char * msg = response.raw();
+//    int send_result = send(this->client_sfd, (void*) msg, strlen(msg), 0);
+//    if (send_result == -1) {
+//        perror("send");
+//    }
 }
 
 unsigned char SocketSPI::read_byte(bool& read_ok) {

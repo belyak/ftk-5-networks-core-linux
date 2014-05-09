@@ -11,7 +11,7 @@ class SocketSPI : public SPI {
 private:
     int client_sfd; // socket file descriptor
 protected:
-    virtual void send_message(const int code, const char * data);
+    virtual void send_message(const int code, wstring data);
     virtual void send_message(CommandResponse & response);
     virtual unsigned char read_byte(bool & read_ok);
 public:
@@ -20,7 +20,7 @@ public:
      * @param client_socket_fd открытый сокет входящего клиентского соединения
      */
     SocketSPI(int client_socket_fd);
-    ~SocketSPI();
+    virtual ~SocketSPI();
 };
 
 #endif
