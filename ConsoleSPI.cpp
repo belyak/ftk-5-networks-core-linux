@@ -9,12 +9,12 @@ using std::flush;
 
 void ConsoleSPI::send_message(const int code, wstring data) {
     CommandResponse * cr = new CommandResponse(code, data);
-    cout << cr->raw() << flush;
+    cout << this->encoder.decode(cr->raw()) << flush;
     delete cr;
 }
 
 void ConsoleSPI::send_message(CommandResponse& response) {
-    cout << response.raw() << flush;
+    cout << this->encoder.decode(response.raw()) << flush;
 }
 
 unsigned char ConsoleSPI::read_byte(bool& read_ok) {
