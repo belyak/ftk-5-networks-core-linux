@@ -25,7 +25,7 @@ void SPICommand::set_current_line(std::string current_line) {
 }
 
 CommandResponse SPICommand::run() {
-    return * new CommandResponse(200, "Abstract response");  
+    return * new CommandResponse(200, L"Abstract response");  
 }
 
 /*
