@@ -95,7 +95,8 @@ void SPI::start() {
     
     
     // отправка приветственного сообщения
-    this->send_message(200, get_banner());
+    CommandResponse bannerResponse(200, get_banner());
+    this->send_message(bannerResponse);
     
     bool exit_called = false;
     while (!exit_called) {
