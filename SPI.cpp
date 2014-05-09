@@ -76,6 +76,8 @@ std::string SPI::first_word(std::string & line) {
 
 void SPI::start() { 
     
+    encoder.setEncoding();
+    
     Statistics statistics(L"Current");
     
     std::map<std::string, SPICommand*> registered_commands;

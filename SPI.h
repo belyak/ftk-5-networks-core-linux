@@ -1,6 +1,7 @@
 #ifndef SPI_H
 #define	SPI_H
 
+#include "Encoder.h"
 #include "Statistics.h"
 #include "CommandResponse.h"
 
@@ -16,6 +17,7 @@
  */
 class SPI {
 protected:
+    Encoder encoder;
     Statistics statistics;
     /**
      * отправляет клиенту сообщение
