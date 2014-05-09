@@ -10,12 +10,12 @@ private:
     std::wstring line;
     const std::wstring * lines;
     unsigned int lines_count;
-    char * raw_response;
+    wchar_t * raw_response;
 public:
     CommandResponse(const int code, const std::wstring line);
     CommandResponse(const int code, const std::wstring * lines, const unsigned int lines_count);
     virtual ~CommandResponse();
-    char * raw();
+    wchar_t * raw();
 };
 
 #endif
