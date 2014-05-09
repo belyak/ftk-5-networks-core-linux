@@ -21,11 +21,11 @@ void SocketSPI::send_message(const int code, wstring data) {
 }
 
 void SocketSPI::send_message(CommandResponse& response) {
-//    char * msg = response.raw();
-//    int send_result = send(this->client_sfd, (void*) msg, strlen(msg), 0);
-//    if (send_result == -1) {
-//        perror("send");
-//    }
+    string msg = encoder.decode(response.raw());
+    int send_result = send(this->client_sfd, (void*) msg.c_str(), msg.length(), 0);
+    if (send_result == -1) {
+        perror("send");
+    }
 }
 
 unsigned char SocketSPI::read_byte(bool& read_ok) {
