@@ -20,6 +20,10 @@ std::string SPICommand::get_keyword() {
     return keyword;
 }
 
+void SPICommand::set_keyword(std::string kw) {
+    this->keyword = kw;
+}
+
 void SPICommand::set_current_line(std::string current_line) {
     this->current_line = std::string(current_line);
 }
@@ -28,15 +32,15 @@ CommandResponse SPICommand::run() {
     return * new CommandResponse(200, L"Abstract response");  
 }
 
-/*
+
 CommandResponse VersionCommand::run() { 
     return * new CommandResponse(200, SERVER_VERSION);
 }
 
 CommandResponse ExitCommand::run() {
-    return * new CommandResponse(200, "Good bye!");
+    return * new CommandResponse(200, L"Good bye!");
 }
-
+/*
 CommandResponse PutLineCommand::run() {
     std::string rest(this->current_line.substr(this->get_keyword().length() + 1));
     std::cout << "REST:`" << rest << "`" << std::endl;

@@ -82,16 +82,16 @@ void SPI::start() {
     
     std::map<std::string, SPICommand*> registered_commands;
     
-    #define REGISTER_CMD(CMD_CLS) { SPICommand * cmd = new CMD_CLS(); \
+    #define REGISTER_CMD(CMD_CLS, CMD_KW) { SPICommand * cmd = new CMD_CLS(); \
     cmd->set_statistics(statistics); \
+    cmd->set_keyword(#CMD_KW); \
     registered_commands[cmd->get_keyword()] = cmd; }
-//    
-//    REGISTER_CMD(VersionCommand);
-//    REGISTER_CMD(ExitCommand);
+    
+    REGISTER_CMD(VersionCommand, ver);
+    REGISTER_CMD(ExitCommand, exit);
 //    REGISTER_CMD(PutLineCommand);
 //    REGISTER_CMD(CalcCommand);
     
-//    ExitCommand * exitCommand = new ExitCommand();
     
     
     // отправка приветственного сообщения
@@ -111,9 +111,11 @@ void SPI::start() {
                 command->set_current_line(line);
                 CommandResponse response = command->run();
                 this->send_message(response);
-//                if (command->get_keyword() == exitCommand->get_keyword()) {
-//                    exit_called = true;
-//                }
+                if (command->get_keyword() == std::string("exit")) {
+                    exit_called = true;
+                } else {
+                    std::cout << "Another keyword:`" << command->get_keyword() << "`" << std::endl;
+                }
             }
     }
 }
