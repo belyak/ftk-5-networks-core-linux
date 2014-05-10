@@ -88,3 +88,21 @@ inline void SPICommand::prepare_response() {
 	throw "Not yet implemented";
 }
 */
+
+RegisteredCommands init_registered_commands() {
+    Statistics statistics(L"Current");
+    
+    static RegisteredCommands registered_commands;
+    
+    #define REGISTER_CMD(CMD_CLS, CMD_KW) { SPICommand * cmd = new CMD_CLS(); \
+    cmd->set_statistics(statistics); \
+    cmd->set_keyword(#CMD_KW); \
+    registered_commands[cmd->get_keyword()] = cmd; }
+    
+    REGISTER_CMD(VersionCommand, ver);
+    REGISTER_CMD(ExitCommand, exit);
+//    REGISTER_CMD(PutLineCommand);
+//    REGISTER_CMD(CalcCommand);
+    
+    return registered_commands;
+}

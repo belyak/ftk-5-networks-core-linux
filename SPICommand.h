@@ -32,4 +32,8 @@ class ExitCommand: public SPICommand {
     CommandResponse run();
 };
 
+typedef std::map<std::string, SPICommand*> RegisteredCommands;
+
+RegisteredCommands init_registered_commands();
+
 #endif

@@ -78,22 +78,8 @@ void SPI::start() {
     
     encoder.setEncoding();
     
-    Statistics statistics(L"Current");
     
-    std::map<std::string, SPICommand*> registered_commands;
-    
-    #define REGISTER_CMD(CMD_CLS, CMD_KW) { SPICommand * cmd = new CMD_CLS(); \
-    cmd->set_statistics(statistics); \
-    cmd->set_keyword(#CMD_KW); \
-    registered_commands[cmd->get_keyword()] = cmd; }
-    
-    REGISTER_CMD(VersionCommand, ver);
-    REGISTER_CMD(ExitCommand, exit);
-//    REGISTER_CMD(PutLineCommand);
-//    REGISTER_CMD(CalcCommand);
-    
-    
-    
+    RegisteredCommands registered_commands = init_registered_commands();
     // отправка приветственного сообщения
     CommandResponse bannerResponse(200, get_banner());
     this->send_message(bannerResponse);

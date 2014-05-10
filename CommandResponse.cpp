@@ -43,6 +43,7 @@ wchar_t * CommandResponse::raw() {
     }
     
     this->raw_response = new wchar_t[response.str().length() + 1];
+    this->raw_response[response.str().length()] = L'\0';
     memcpy((void*)this->raw_response, (void*) response.str().data(), response.str().length()*sizeof(wchar_t));
     return this->raw_response;
 }
