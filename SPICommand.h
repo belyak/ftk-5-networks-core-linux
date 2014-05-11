@@ -12,6 +12,8 @@ protected:
 	std::string current_line;
 	std::string keyword;
 
+    std::string get_rest();
+    
 public:
 	virtual void set_statistics(Statistics& statistics);
     
@@ -50,6 +52,10 @@ class CalcCommand: public SPICommand {
 };
 
 class PrintStatisticsCommand: public SPICommand {
+    CommandResponse run();
+};
+
+class SaveCommand: public SPICommand {
     CommandResponse run();
 };
 

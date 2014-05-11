@@ -26,6 +26,12 @@ std::string SPICommand::get_keyword() {
     return keyword;
 }
 
+std::string SPICommand::get_rest() {
+    static std::string rest;
+    rest = this->current_line.replace(0, this->keyword.length() + 1, "");
+    return rest;
+}
+
 void SPICommand::set_keyword(std::string kw) {
     this->keyword = kw;
 }
@@ -48,7 +54,7 @@ CommandResponse ExitCommand::run() {
 }
 
 CommandResponse PutLineCommand::run() {
-    std::string rest = this->current_line.replace(0, this->keyword.length() + 1, "");
+    std::string rest = get_rest();
     
     std::wstring line = this->encoder->encode(rest);
     
@@ -98,23 +104,25 @@ CommandResponse PrintStatisticsCommand::run() {
     }
 }
 
-/*
+
 CommandResponse SaveCommand::run() {
-    std::string rest(this->current_line.substr(this->get_keyword().length() + 1));
-    std::cout << "REST:`" << rest << "`" << std::endl;
+    std::string rest = get_rest();
+    std::wstring name = encoder->encode(rest);
     
-    int max_buffer_len = rest.length()*2;
-    wchar_t * buffer = new wchar_t[max_buffer_len];
-    mbstowcs(buffer, rest.c_str(), max_buffer_len);
-    std::wstring name(buffer);
-    delete buffer;
+    if (name.length() == 0) {
+        return * new CommandResponse(400, L"You should provide name");
+    }
     
     this->statistics->save(name);
-    char msg[MAX_LINE_LENGTH];
-    sprintf(msg, "Statistics \"%s\" has been saved", rest.c_str());
-    return * new CommandResponse(200, msg);
+    
+    std::wstringstream wss;
+    wss << L"Statistics \"" << name << L"\" has been saved";
+    
+    return * new CommandResponse(200, wss.str());
 }
 
+
+/*
 inline void SPICommand::prepare_response() {
 	// TODO - implement SPICommand::prepare_response
 	throw "Not yet implemented";
@@ -137,6 +145,7 @@ RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & e
     REGISTER_CMD(ClearBufferCommand, cl);
     REGISTER_CMD(CalcCommand, calc);
     REGISTER_CMD(PrintStatisticsCommand, ps);
+    REGISTER_CMD(SaveCommand, st);
     
     return registered_commands;
 }
