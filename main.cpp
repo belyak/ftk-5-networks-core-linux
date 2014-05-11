@@ -50,7 +50,7 @@ void start_console_mode() {
 }
 
 void start_server_mode() {
-    int server_sfd = create_server_socket(18003, true);
+    int server_sfd = create_server_socket(18001, true);
     
     struct sockaddr client_address;
     socklen_t client_address_length = sizeof(client_address);

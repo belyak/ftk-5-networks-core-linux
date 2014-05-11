@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <sstream>
 
 #include "SPI.h"
 #include "SPICommand.h"
@@ -14,6 +15,10 @@
 
 void SPICommand::set_statistics(Statistics& statistics) {
     this->statistics = &statistics;
+}
+
+void SPICommand::set_encoder(Encoder* encoder) {
+    this->encoder = encoder;
 }
 
 std::string SPICommand::get_keyword() {
@@ -40,24 +45,30 @@ CommandResponse VersionCommand::run() {
 CommandResponse ExitCommand::run() {
     return * new CommandResponse(200, L"Good bye!");
 }
-/*
+
 CommandResponse PutLineCommand::run() {
-    std::string rest(this->current_line.substr(this->get_keyword().length() + 1));
-    std::cout << "REST:`" << rest << "`" << std::endl;
+    std::string rest = this->current_line.replace(0, this->keyword.length() + 1, "");
     
-    int max_buffer_len = rest.length()*2;
-    wchar_t * buffer = new wchar_t[max_buffer_len];
-    mbstowcs(buffer, rest.c_str(), max_buffer_len);
-    std::wstring line(buffer);
-    delete buffer;
+    std::wstring line = this->encoder->encode(rest);
     
+    std::cout << " going to putLine, len:" << line.length() << std::endl;
     this->statistics->putLine(line);
     int lCount = this->statistics->getLinesCount();
-    char response_txt[MAX_LINE_LENGTH];
-    sprintf(response_txt, "line has been collected (%d at the moment).", lCount);
-    return * new CommandResponse(200, response_txt);
+    std::wstringstream wss;
+    wss << L"line has been collected (" << lCount << L" at the moment).";
+    return * new CommandResponse(200, wss.str());
 }
 
+CommandResponse CalcCommand::run() {
+    this->statistics->calculate();
+    std::wstringstream wss;
+    int lCount = this->statistics->getLinesCount();
+    int wCount = this->statistics->getWordsCount();
+    wss << L"Calculated (" << lCount << L" lines, " << wCount << L" words)";
+    return * new CommandResponse(200, wss.str());
+}
+
+/*
 CommandResponse SaveCommand::run() {
     std::string rest(this->current_line.substr(this->get_keyword().length() + 1));
     std::cout << "REST:`" << rest << "`" << std::endl;
@@ -74,35 +85,26 @@ CommandResponse SaveCommand::run() {
     return * new CommandResponse(200, msg);
 }
 
-CommandResponse CalcCommand::run() {
-    this->statistics->calculate();
-    char buffer[MAX_LINE_LENGTH];
-    int lCount = this->statistics->getLinesCount();
-    int wCount = this->statistics->getWordsCount();
-    sprintf(buffer, "Calculated (%d lines, %d words)", lCount, wCount);
-    return * new CommandResponse(200, buffer);
-}
-
 inline void SPICommand::prepare_response() {
 	// TODO - implement SPICommand::prepare_response
 	throw "Not yet implemented";
 }
 */
 
-RegisteredCommands init_registered_commands() {
-    Statistics statistics(L"Current");
+RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & encoder) {
     
     static RegisteredCommands registered_commands;
     
     #define REGISTER_CMD(CMD_CLS, CMD_KW) { SPICommand * cmd = new CMD_CLS(); \
     cmd->set_statistics(statistics); \
     cmd->set_keyword(#CMD_KW); \
+    cmd->set_encoder(&encoder); \
     registered_commands[cmd->get_keyword()] = cmd; }
     
     REGISTER_CMD(VersionCommand, ver);
     REGISTER_CMD(ExitCommand, exit);
-//    REGISTER_CMD(PutLineCommand);
-//    REGISTER_CMD(CalcCommand);
+    REGISTER_CMD(PutLineCommand, pl);
+    REGISTER_CMD(CalcCommand, calc);
     
     return registered_commands;
 }

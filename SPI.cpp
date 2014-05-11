@@ -75,11 +75,11 @@ std::string SPI::first_word(std::string & line) {
 }
 
 void SPI::start() { 
-    
+   
+    Statistics statistics(L"Current");
     encoder.setEncoding();
-    
-    
-    RegisteredCommands registered_commands = init_registered_commands();
+   
+    RegisteredCommands registered_commands = init_registered_commands(statistics, encoder);
     // отправка приветственного сообщения
     CommandResponse bannerResponse(200, get_banner());
     this->send_message(bannerResponse);
