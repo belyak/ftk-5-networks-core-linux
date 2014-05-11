@@ -18,7 +18,7 @@ public:
     
     string decode(wstring input_string);
     
-    wstring encode(string input_string);
+    wstring encode(const string & input_string);
 };
 
 

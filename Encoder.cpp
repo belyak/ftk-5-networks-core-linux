@@ -34,7 +34,7 @@ string Encoder::decode(wstring input_string) {
     return s_result;
 }
 
-wstring Encoder::encode(string input_string) {
+wstring Encoder::encode(const string & input_string) {
 
     const char * in_string = input_string.c_str();
     size_t in_string_length = (input_string.length() + 1) * sizeof(char);
