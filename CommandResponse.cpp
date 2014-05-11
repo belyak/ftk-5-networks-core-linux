@@ -25,6 +25,9 @@ CommandResponse::~CommandResponse() {
     if (this->raw_response != NULL) {
         delete this->raw_response;
     }
+    if (this->lines != NULL) {
+        delete [] this->lines;
+    }
 }
 
 wchar_t * CommandResponse::raw() {
@@ -33,11 +36,11 @@ wchar_t * CommandResponse::raw() {
         // первая строка начинается с кода и пробела:
         response << this->code << ' ' << lines[0] << CRLF;
         // все строки идут без изменений: 
-        for (int i = 0; i < lines_count - 1; i++) {
+        for (int i = 1; i < lines_count - 1; i++) {
             response << lines[i] << CRLF;
         }
         // последняя строка начинается с кода и минуса
-        response << this->code << '-' << lines[lines_count - 2] << CRLF;
+        response << this->code << '-' << lines[lines_count - 1] << CRLF;
     } else {
         response << this->code << ' ' << this->line << CRLF;
     }
