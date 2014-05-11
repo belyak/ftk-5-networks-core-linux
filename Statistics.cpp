@@ -34,6 +34,8 @@ void Statistics::putLine(wstring line) {
 void Statistics::clearBuffer() {
 	this->lines.clear();
 	this->data.clear();
+        this->lines_count = 0;
+        this->words_count = 0;
 }
 
 void Statistics::putWord(wstring word) {
