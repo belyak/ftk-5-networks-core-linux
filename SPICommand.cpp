@@ -121,6 +121,25 @@ CommandResponse SaveCommand::run() {
     return * new CommandResponse(200, wss.str());
 }
 
+CommandResponse LoadCommand::run() {
+    std::string rest = get_rest();
+    std::wstring name = encoder->encode(rest);
+    
+    if (name.length() == 0) {
+        return * new CommandResponse(400, L"You should provide name!!!");
+    }
+    
+    bool isLoaded = this->statistics->load(name);
+    
+    std::wstringstream wss;
+    if (isLoaded) {
+        wss << L"Statistics \"" << name << L"\" has been loaded.";
+        return * new CommandResponse(200, wss.str());
+    } else {
+        wss << L"Statistics \"" << name << L"\" has not been loaded!!!";
+        return * new CommandResponse(404, wss.str());
+    }
+}
 
 /*
 inline void SPICommand::prepare_response() {
@@ -146,6 +165,7 @@ RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & e
     REGISTER_CMD(CalcCommand, calc);
     REGISTER_CMD(PrintStatisticsCommand, ps);
     REGISTER_CMD(SaveCommand, st);
+    REGISTER_CMD(LoadCommand, ld);
     
     return registered_commands;
 }

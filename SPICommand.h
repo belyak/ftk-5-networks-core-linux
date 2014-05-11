@@ -59,6 +59,10 @@ class SaveCommand: public SPICommand {
     CommandResponse run();
 };
 
+class LoadCommand: public SPICommand {
+    CommandResponse run();
+};
+
 typedef std::map<std::string, SPICommand*> RegisteredCommands;
 
 RegisteredCommands init_registered_commands(Statistics &, Encoder &);

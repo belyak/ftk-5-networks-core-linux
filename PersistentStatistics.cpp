@@ -62,15 +62,20 @@ bool PersistentStatistics::load(std::wstring name) {
 	while (input_file.eof() != true) {
 		input_file.getline(buffer, MAX_LINE_LENGTH);
 		std::wstring data(buffer);
-
-		std::wstring::size_type space_pos = data.find(L" ");
+                
+                std::wstring::size_type space_pos = data.find(L" ");
 		if (space_pos != std::wstring::npos) {
 			std::wstring word(data.substr(0, space_pos));
-			std::wstring count_str(data.substr(space_pos));
-			int count = atoi((char*)count_str.c_str());
+			std::wstring w_count_str(data.substr(space_pos));
+                        std::string count_str(w_count_str.begin(), w_count_str.end());
+			int count = atoi(count_str.c_str());
 			(*this->data)[word] = count;
 		}
 	}
 	input_file.close();
+        std::wcout << L"DEBUG:\n";
+        for (StatisticsMap::iterator i = this->data->begin(); i != this->data->end(); i++) {
+            std::wcout << i->first << L" :: " << i->second << std::endl;
+        }
 	return true;
 }

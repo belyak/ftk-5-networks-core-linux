@@ -82,5 +82,8 @@ void Statistics::dumpLines() {
 
 bool Statistics::load(std::wstring name) {
 	bool loadResult = this->storage->load(name);
+        if (loadResult) {
+            this->data = * this->storage->data;
+        }
 	return loadResult;
 }
