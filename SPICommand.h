@@ -41,6 +41,10 @@ class PutLineCommand: public SPICommand {
     CommandResponse run();
 };
 
+class ClearBufferCommand: public SPICommand {
+    CommandResponse run();
+};
+
 class CalcCommand: public SPICommand {
     CommandResponse run();
 };

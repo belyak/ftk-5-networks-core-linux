@@ -60,6 +60,11 @@ CommandResponse PutLineCommand::run() {
     return * new CommandResponse(200, wss.str());
 }
 
+CommandResponse ClearBufferCommand::run() {
+    this->statistics->clearBuffer();
+    return * new CommandResponse(200, L"Buffer has been cleared.");
+}
+
 CommandResponse CalcCommand::run() {
     this->statistics->calculate();
     std::wstringstream wss;
@@ -72,16 +77,25 @@ CommandResponse CalcCommand::run() {
 CommandResponse PrintStatisticsCommand::run() {
     StatisticsMap & statistics_map = this->statistics->data;
     unsigned int lines_count = statistics_map.size();
-    std::wstring * lines = new std::wstring[lines_count];
-    int i = 0;
-    for (StatisticsMap::iterator e = statistics_map.begin(); e != statistics_map.end(); e++) {
-        StatisticsEntry entry = *e;
+    if (lines_count > 1) {
+        std::wstring * lines = new std::wstring[lines_count];
+        int i = 0;
+        for (StatisticsMap::iterator e = statistics_map.begin(); e != statistics_map.end(); e++) {
+            StatisticsEntry entry = *e;
+            std::wstringstream wss;
+            wss << entry.first << L" " << entry.second;
+            lines[i] = wss.str();
+            i++;
+        }
+        return * new CommandResponse(200, lines, lines_count);
+    } else if (lines_count == 1) {
         std::wstringstream wss;
+        StatisticsEntry entry = *statistics_map.begin();
         wss << entry.first << L" " << entry.second;
-        lines[i] = wss.str();
-        i++;
+        return * new CommandResponse(200, wss.str());
+    } else { // lines_count == 0
+        return * new CommandResponse(200, L"");
     }
-    return * new CommandResponse(200, lines, lines_count);
 }
 
 /*
@@ -120,6 +134,7 @@ RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & e
     REGISTER_CMD(VersionCommand, ver);
     REGISTER_CMD(ExitCommand, exit);
     REGISTER_CMD(PutLineCommand, pl);
+    REGISTER_CMD(ClearBufferCommand, cl);
     REGISTER_CMD(CalcCommand, calc);
     REGISTER_CMD(PrintStatisticsCommand, ps);
     
