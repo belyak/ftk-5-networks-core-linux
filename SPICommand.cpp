@@ -8,6 +8,7 @@
 #include "SPI.h"
 #include "SPICommand.h"
 #include "CommandResponse.h"
+#include "Statistics.h"
 
 #include "create_message.h"
 #include "lgs_constants.h"
@@ -68,6 +69,21 @@ CommandResponse CalcCommand::run() {
     return * new CommandResponse(200, wss.str());
 }
 
+CommandResponse PrintStatisticsCommand::run() {
+    StatisticsMap & statistics_map = this->statistics->data;
+    unsigned int lines_count = statistics_map.size();
+    std::wstring * lines = new std::wstring[lines_count];
+    int i = 0;
+    for (StatisticsMap::iterator e = statistics_map.begin(); e != statistics_map.end(); e++) {
+        StatisticsEntry entry = *e;
+        std::wstringstream wss;
+        wss << entry.first << L" " << entry.second;
+        lines[i] = wss.str();
+        i++;
+    }
+    return * new CommandResponse(200, lines, lines_count);
+}
+
 /*
 CommandResponse SaveCommand::run() {
     std::string rest(this->current_line.substr(this->get_keyword().length() + 1));
@@ -105,6 +121,7 @@ RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & e
     REGISTER_CMD(ExitCommand, exit);
     REGISTER_CMD(PutLineCommand, pl);
     REGISTER_CMD(CalcCommand, calc);
+    REGISTER_CMD(PrintStatisticsCommand, ps);
     
     return registered_commands;
 }
