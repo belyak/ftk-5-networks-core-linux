@@ -9,6 +9,8 @@ using std::wstring;
 
 class Statistics {
 
+    friend class PrintStatisticsCommand;
+    
 protected:
 	wstring name;
     int words_count;
