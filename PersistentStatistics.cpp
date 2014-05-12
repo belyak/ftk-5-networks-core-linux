@@ -73,9 +73,6 @@ bool PersistentStatistics::load(std::wstring name) {
 		}
 	}
 	input_file.close();
-        std::wcout << L"DEBUG:\n";
-        for (StatisticsMap::iterator i = this->data->begin(); i != this->data->end(); i++) {
-            std::wcout << i->first << L" :: " << i->second << std::endl;
-        }
+        
 	return true;
 }
