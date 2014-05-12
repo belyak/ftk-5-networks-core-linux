@@ -80,6 +80,21 @@ CommandResponse CalcCommand::run() {
     return * new CommandResponse(200, wss.str());
 }
 
+CommandResponse SetEncodingCommand::run() {
+    std::string encoding = get_rest();
+    std::wstring w_encoding = std::wstring(encoding.begin(), encoding.end());
+    
+    bool setEncodingResult = encoder->setEncoding(encoding.c_str());
+    std::wstringstream wss;
+    if (setEncodingResult) {
+        wss << L"Encoding has been changed to `" << w_encoding << "`";
+        return * new CommandResponse(200, wss.str());
+    } else {
+        wss << L"Unable to find/set encoding`" << w_encoding << "`!!!";
+        return * new CommandResponse(404, wss.str());
+    }
+}
+
 CommandResponse PrintStatisticsCommand::run() {
     StatisticsMap & statistics_map = this->statistics->data;
     unsigned int lines_count = statistics_map.size();
@@ -185,6 +200,7 @@ RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & e
     REGISTER_CMD(SaveCommand, st);
     REGISTER_CMD(LoadCommand, ld);
     REGISTER_CMD(MergeCommand, mrg);
+    REGISTER_CMD(SetEncodingCommand, enc);
     
     return registered_commands;
 }
