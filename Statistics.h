@@ -21,7 +21,7 @@ protected:
     StatisticsMap data;
 
 private:
-    void putWord(wstring word);
+    void putWord(wstring word, unsigned int increment = 1);
 
 public:
     static const wstring * LETTERS;
@@ -34,6 +34,8 @@ public:
     int getLinesCount() { return lines_count; }
     int getWordsCount() { return words_count; }
 
+    void merge(Statistics &);
+    
     void dumpLines();
 
     /* методы включенного объекта-хранилища: */

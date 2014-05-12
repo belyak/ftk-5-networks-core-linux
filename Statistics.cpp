@@ -38,11 +38,11 @@ void Statistics::clearBuffer() {
         this->words_count = 0;
 }
 
-void Statistics::putWord(wstring word) {
+void Statistics::putWord(wstring word, unsigned int increment) {
 	if (this->data.find(word) == this->data.end()) {
-		this->data[word] = 1;
+		this->data[word] = increment;
 	} else {
-		this->data[word]++;
+		this->data[word] += increment;
 	}
 }
 
@@ -71,6 +71,15 @@ void Statistics::calculate() {
 		StatisticsEntry entry = *i;
 		wcout << entry.first << L": " << entry.second << endl;
 	}
+}
+
+void Statistics::merge(Statistics & anotherStatistics) {
+    StatisticsMap & anotherData = anotherStatistics.data;
+    for (StatisticsMap::iterator i = anotherData.begin(); i != anotherData.end(); i++) {
+        StatisticsEntry entry = *i;
+        this->putWord(entry.first, entry.second);
+    }
+    return;
 }
 
 void Statistics::dumpLines() {

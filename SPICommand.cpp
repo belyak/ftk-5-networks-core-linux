@@ -141,12 +141,30 @@ CommandResponse LoadCommand::run() {
     }
 }
 
-/*
-inline void SPICommand::prepare_response() {
-	// TODO - implement SPICommand::prepare_response
-	throw "Not yet implemented";
+
+CommandResponse MergeCommand::run() {
+    std::string rest = get_rest();
+    std::wstring name = encoder->encode(rest);
+    std::wstringstream wss;
+    
+    
+    if (name.length() == 0) {
+        return * new CommandResponse(400, L"You should provide name!!!");
+    }
+    
+    Statistics anotherStatistics(L"Another");
+    bool isLoaded = anotherStatistics.load(name);
+    
+    if (!isLoaded) {
+        wss << L"Statistics \"" << name << L"\" has not been loaded!!!";
+        return * new CommandResponse(404, wss.str());
+    } else {
+        this->statistics->merge(anotherStatistics);
+        wss << L"Statistics \"" << name << L"\" has been merge into current";
+        return * new CommandResponse(200, wss.str());
+    }
 }
-*/
+
 
 RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & encoder) {
     
@@ -166,6 +184,7 @@ RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & e
     REGISTER_CMD(PrintStatisticsCommand, ps);
     REGISTER_CMD(SaveCommand, st);
     REGISTER_CMD(LoadCommand, ld);
+    REGISTER_CMD(MergeCommand, mrg);
     
     return registered_commands;
 }
