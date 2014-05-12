@@ -2,17 +2,21 @@
 
 
 bool Encoder::setEncoding(const char * encoding) {
-     descr_out = iconv_open(encoding, "WCHAR_T");
+    iconv_t new_descr_out = iconv_open(encoding, "WCHAR_T");
 
-    if ((iconv_t)-1 == descr_out) {
+    if ((iconv_t)-1 == new_descr_out) {
         return false;
     }
 
-    descr_in = iconv_open("WCHAR_T", encoding);
+    iconv_t new_descr_in = iconv_open("WCHAR_T", encoding);
 
-    if ((iconv_t)-1 == descr_in) {
+    if ((iconv_t)-1 == new_descr_in) {
         return false;
     }
+    
+    this->descr_in = new_descr_in;
+    this->descr_out = new_descr_out;
+    
     return true; 
 }
 
