@@ -34,13 +34,13 @@ wchar_t * CommandResponse::raw() {
     std::wstringstream response;
     if (this->is_multi_line) {
         // первая строка начинается с кода и пробела:
-        response << this->code << ' ' << lines[0] << CRLF;
+        response << this->code << '-' << lines[0] << CRLF;
         // все строки идут без изменений: 
         for (int i = 1; i < lines_count - 1; i++) {
             response << lines[i] << CRLF;
         }
         // последняя строка начинается с кода и минуса
-        response << this->code << '-' << lines[lines_count - 1] << CRLF;
+        response << this->code << ' ' << lines[lines_count - 1] << CRLF;
     } else {
         response << this->code << ' ' << this->line << CRLF;
     }
