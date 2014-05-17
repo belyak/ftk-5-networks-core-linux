@@ -55,7 +55,7 @@ void start_server_mode() {
     while (-1 == (server_sfd = create_server_socket(port, true))) {
         port++;
     }
-    
+    std::cout << "Server started at port " << port << std::endl;
     struct sockaddr client_address;
     socklen_t client_address_length = sizeof(client_address);
     while(true) {
