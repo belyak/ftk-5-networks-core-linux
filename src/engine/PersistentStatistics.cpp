@@ -2,8 +2,8 @@
 #include <string>
 #include <fstream>
 #include <stdlib.h>
-#include "lgs_types.h"
-#include "lgs_constants.h"
+#include "../lgs_types.h"
+#include "../lgs_constants.h"
 #include "Statistics.h"
 #include "PersistentStatistics.h"
 

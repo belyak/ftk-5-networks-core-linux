@@ -1,5 +1,5 @@
 #include "ConsoleSPI.h"
-#include "CommandResponse.h"
+#include "commands/CommandResponse.h"
 
 #include <stdio.h>
 #include <iostream>

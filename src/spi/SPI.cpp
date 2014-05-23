@@ -1,8 +1,8 @@
 #include "SPI.h"
-#include "lgs_constants.h"
+#include "../lgs_constants.h"
 #include "create_message.h"
-#include "SPICommand.h"
-#include "CommandResponse.h"
+#include "commands/SPICommand.h"
+#include "commands/CommandResponse.h"
 
 #include <iostream>
 #include <string.h>
@@ -16,9 +16,26 @@
 #include <sstream>
 
 
-std::wstring get_banner() {
+std::wstring get_banner(RegisteredCommands & registered_commands) {
     std::wstringstream ws;
+    // Начало сообщения
     ws << SERVER_BANNER_P1 << SERVER_VERSION << SERVER_BANNER_P2;
+    // список поддерживаемых комманд:
+    ws << L" SC:";
+    bool firstCmd = true;
+    for (RegisteredCommands::iterator i = registered_commands.begin(); i != registered_commands.end(); i++) {
+        std::string s_mnemonic =  (*i).first;
+        std::wstring mnemonic(s_mnemonic.begin(), s_mnemonic.end());
+        if (firstCmd) {
+            firstCmd = false;
+        } else {
+            ws << L",";
+        }
+        ws << mnemonic;
+    }
+    ws << L".";
+    // захардкодим список режимов передачи:
+    ws << L" SM:plain.";
     return ws.str();
 }
 
@@ -81,7 +98,7 @@ void SPI::start() {
    
     RegisteredCommands registered_commands = init_registered_commands(statistics, encoder);
     // отправка приветственного сообщения
-    CommandResponse bannerResponse(200, get_banner());
+    CommandResponse bannerResponse(200, get_banner(registered_commands));
     this->send_message(bannerResponse);
     
     bool exit_called = false;

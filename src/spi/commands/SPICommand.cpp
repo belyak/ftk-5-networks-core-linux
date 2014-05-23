@@ -5,13 +5,13 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "SPI.h"
+#include "../SPI.h"
 #include "SPICommand.h"
 #include "CommandResponse.h"
-#include "Statistics.h"
+#include "../../engine/Statistics.h"
 
-#include "create_message.h"
-#include "lgs_constants.h"
+#include "../create_message.h"
+#include "../../lgs_constants.h"
 
 
 void SPICommand::set_statistics(Statistics& statistics) {
@@ -93,6 +93,10 @@ CommandResponse SetEncodingCommand::run() {
         wss << L"Unable to find/set encoding`" << w_encoding << "`!!!";
         return * new CommandResponse(404, wss.str());
     }
+}
+
+CommandResponse SetTransferModeCommand::run() {
+    return * new CommandResponse(400, L"Not implemented in c++ version yet!");
 }
 
 CommandResponse PrintStatisticsCommand::run() {
@@ -201,6 +205,7 @@ RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & e
     REGISTER_CMD(LoadCommand, ld);
     REGISTER_CMD(MergeCommand, mrg);
     REGISTER_CMD(SetEncodingCommand, enc);
+    REGISTER_CMD(SetTransferModeCommand, mode)
     
     return registered_commands;
 }

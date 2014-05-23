@@ -5,10 +5,10 @@
 
 #include <iostream>
 
-#include "create_server_socket.h"
-#include "socketaddr_to_str.h"
-#include "ConsoleSPI.h"
-#include "SocketSPI.h"
+#include "net/create_server_socket.h"
+#include "net/socketaddr_to_str.h"
+#include "spi/ConsoleSPI.h"
+#include "spi/SocketSPI.h"
 
 using std::endl;
 using std::cout;

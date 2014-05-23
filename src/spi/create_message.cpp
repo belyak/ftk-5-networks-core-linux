@@ -1,6 +1,6 @@
 #include "create_message.h"
 
-#include "lgs_constants.h"
+#include "../lgs_constants.h"
 
 #include <string.h>
 #include <stdio.h>

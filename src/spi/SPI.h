@@ -1,9 +1,10 @@
 #ifndef SPI_H
 #define	SPI_H
 
-#include "Encoder.h"
-#include "Statistics.h"
-#include "CommandResponse.h"
+#include "../encoder/Encoder.h"
+#include "../engine/Statistics.h"
+#include "commands/CommandResponse.h"
+#include "../converters/AbstractConverter.h"
 
 #include <string>
 
@@ -18,6 +19,7 @@
 class SPI {
 protected:
     Encoder encoder;
+    AbstractConverter * converter;
     Statistics statistics;
     /**
      * отправляет клиенту сообщение

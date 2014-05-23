@@ -2,7 +2,7 @@
 #define CONSOLE_SPI_H
 
 #include "SPI.h"
-#include "CommandResponse.h"
+#include "commands/CommandResponse.h"
 
 #include <string>
 

@@ -1,7 +1,7 @@
 #ifndef _STATISTICS_H_
 #define _STATISTICS_H_
 
-#include "lgs_types.h"
+#include "../lgs_types.h"
 #include "PersistentStatistics.h"
 
 using std::wstring;

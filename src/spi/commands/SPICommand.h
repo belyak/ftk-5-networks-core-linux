@@ -1,7 +1,7 @@
 #ifndef SPI_COMMAND_H
 #define SPI_COMMAND_H
 
-#include "Encoder.h"
+#include "../../encoder/Encoder.h"
 
 class SPICommand {
 protected:
@@ -67,6 +67,10 @@ class MergeCommand : public SPICommand {
 };
 
 class SetEncodingCommand: public SPICommand {
+    CommandResponse run();
+};
+
+class SetTransferModeCommand: public SPICommand {
     CommandResponse run();
 };
 

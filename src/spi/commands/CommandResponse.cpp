@@ -1,5 +1,5 @@
 #include "CommandResponse.h"
-#include "lgs_constants.h"
+#include "../../lgs_constants.h"
 
 #include <stdio.h>
 #include <string.h>
