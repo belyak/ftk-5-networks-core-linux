@@ -96,7 +96,7 @@ void SPI::start() {
     Statistics statistics(L"Current");
     encoder.setEncoding();
    
-    RegisteredCommands registered_commands = init_registered_commands(statistics, encoder);
+    RegisteredCommands registered_commands = init_registered_commands(statistics, encoder, this);
     // отправка приветственного сообщения
     CommandResponse bannerResponse(200, get_banner(registered_commands));
     this->send_message(bannerResponse);

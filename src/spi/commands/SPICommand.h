@@ -8,19 +8,16 @@ protected:
     CommandResponse* response;
     Statistics* statistics;
     Encoder * encoder;
+    SPI * spi;
     std::string current_line;
     std::string keyword;
 
     std::string get_rest();
 
 public:
-    virtual void set_statistics(Statistics& statistics);
-
-    void set_encoder(Encoder * encoder);
+    void init(Statistics & statistics, Encoder * encoder, SPI * spi, std::string keyword);
 
     std::string get_keyword();
-
-    void set_keyword(std::string);
 
     inline void prepare_response();
 
@@ -39,6 +36,10 @@ class ExitCommand : public SPICommand {
 };
 
 class PutLineCommand : public SPICommand {
+    CommandResponse run();
+};
+
+class PutTextCommand: public SPICommand {
     CommandResponse run();
 };
 
@@ -76,6 +77,6 @@ class SetTransferModeCommand: public SPICommand {
 
 typedef std::map<std::string, SPICommand*> RegisteredCommands;
 
-RegisteredCommands init_registered_commands(Statistics &, Encoder &);
+RegisteredCommands init_registered_commands(Statistics &, Encoder &, SPI *);
 
 #endif

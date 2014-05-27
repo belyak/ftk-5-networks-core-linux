@@ -14,12 +14,11 @@
 #include "../../lgs_constants.h"
 
 
-void SPICommand::set_statistics(Statistics& statistics) {
+void SPICommand::init(Statistics & statistics, Encoder * encoder, SPI * spi, std::string keyword) {
     this->statistics = &statistics;
-}
-
-void SPICommand::set_encoder(Encoder* encoder) {
     this->encoder = encoder;
+    this->keyword = keyword;
+    this->spi = spi;
 }
 
 std::string SPICommand::get_keyword() {
@@ -30,10 +29,6 @@ std::string SPICommand::get_rest() {
     static std::string rest;
     rest = this->current_line.replace(0, this->keyword.length() + 1, "");
     return rest;
-}
-
-void SPICommand::set_keyword(std::string kw) {
-    this->keyword = kw;
 }
 
 void SPICommand::set_current_line(std::string current_line) {
@@ -63,6 +58,28 @@ CommandResponse PutLineCommand::run() {
     int lCount = this->statistics->getLinesCount();
     std::wstringstream wss;
     wss << L"line has been collected (" << lCount << L" at the moment).";
+    return * new CommandResponse(200, wss.str());
+}
+
+CommandResponse PutTextCommand::run() {
+    std::string rest = get_rest();
+    std::wstring endMarker = this->encoder->encode(rest);
+    int collectedLinesCount = 0;
+    while (true) {
+        std::string inLine(this->spi->read_line());
+        
+        std::wstring line = this->encoder->encode(inLine);
+        
+        if (line.find(endMarker) != line.npos) {
+            break;
+        } else {
+            this->statistics->putLine(line);
+            collectedLinesCount++;
+        }
+    }
+    int totalLinesCount = this->statistics->getLinesCount();
+    std::wstringstream wss;
+    wss << collectedLinesCount << L" lines has been collected (" << totalLinesCount << L" total)";
     return * new CommandResponse(200, wss.str());
 }
 
@@ -185,19 +202,18 @@ CommandResponse MergeCommand::run() {
 }
 
 
-RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & encoder) {
+RegisteredCommands init_registered_commands(Statistics & statistics, Encoder & encoder, SPI * spi) {
     
     static RegisteredCommands registered_commands;
     
     #define REGISTER_CMD(CMD_CLS, CMD_KW) { SPICommand * cmd = new CMD_CLS(); \
-    cmd->set_statistics(statistics); \
-    cmd->set_keyword(#CMD_KW); \
-    cmd->set_encoder(&encoder); \
+    cmd->init(statistics, &encoder, spi, #CMD_KW); \
     registered_commands[cmd->get_keyword()] = cmd; }
     
     REGISTER_CMD(VersionCommand, ver);
     REGISTER_CMD(ExitCommand, exit);
     REGISTER_CMD(PutLineCommand, pl);
+    REGISTER_CMD(PutTextCommand, pt);
     REGISTER_CMD(ClearBufferCommand, cl);
     REGISTER_CMD(CalcCommand, calc);
     REGISTER_CMD(PrintStatisticsCommand, ps);
