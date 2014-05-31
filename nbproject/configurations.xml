@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="79">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="converters" projectFiles="true">
+        <itemPath>src/converters/AbstractConverter.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="encoder" projectFiles="true">
+        <itemPath>src/encoder/Encoder.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="engine" projectFiles="true">
+        <itemPath>src/engine/PersistentStatistics.h</itemPath>
+        <itemPath>src/engine/Statistics.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="net" projectFiles="true">
+        <itemPath>src/net/create_server_socket.h</itemPath>
+        <itemPath>src/net/socketaddr_to_str.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="spi" projectFiles="true">
+        <logicalFolder name="f1" displayName="commands" projectFiles="true">
+          <itemPath>src/spi/commands/CommandResponse.h</itemPath>
+          <itemPath>src/spi/commands/SPICommand.h</itemPath>
+        </logicalFolder>
+        <itemPath>src/spi/ConsoleSPI.h</itemPath>
+        <itemPath>src/spi/SPI.h</itemPath>
+        <itemPath>src/spi/SocketSPI.h</itemPath>
+        <itemPath>src/spi/create_message.h</itemPath>
+      </logicalFolder>
+      <itemPath>src/lgs_constants.h</itemPath>
+      <itemPath>src/lgs_types.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f4" displayName="converters" projectFiles="true">
+        <itemPath>src/converters/PlainConverter.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="encoder" projectFiles="true">
+        <itemPath>src/encoder/Encoder.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="engine" projectFiles="true">
+        <itemPath>src/engine/PersistentStatistics.cpp</itemPath>
+        <itemPath>src/engine/Statistics.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="net" projectFiles="true">
+        <itemPath>src/net/create_server_socket.cpp</itemPath>
+        <itemPath>src/net/socketaddr_to_str.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="spi" projectFiles="true">
+        <logicalFolder name="f1" displayName="commands" projectFiles="true">
+          <itemPath>src/spi/commands/CommandResponse.cpp</itemPath>
+          <itemPath>src/spi/commands/SPICommand.cpp</itemPath>
+        </logicalFolder>
+        <itemPath>src/spi/ConsoleSPI.cpp</itemPath>
+        <itemPath>src/spi/SPI.cpp</itemPath>
+        <itemPath>src/spi/SocketSPI.cpp</itemPath>
+        <itemPath>src/spi/create_message.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>src/main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>GNU|GNU</compilerSet>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standardsEvolution>3</standardsEvolution>
+        </ccTool>
+      </compileType>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>GNU|GNU</compilerSet>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>
