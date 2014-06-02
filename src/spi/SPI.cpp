@@ -113,11 +113,10 @@ void SPI::start() {
                 std::cout << "going to run " << command->get_keyword() << std::endl;
                 command->set_current_line(line);
                 CommandResponse response = command->run();
+                std::cout << "got response" << std::endl;
                 this->send_message(response);
                 if (command->get_keyword() == std::string("exit")) {
                     exit_called = true;
-                } else {
-                    std::cout << "Another keyword:`" << command->get_keyword() << "`" << std::endl;
                 }
             }
     }

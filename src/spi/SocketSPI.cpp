@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <iostream>
 #include <sys/socket.h>
 
 #include "SocketSPI.h"
@@ -22,6 +22,7 @@ void SocketSPI::send_message(const int code, wstring data) {
 
 void SocketSPI::send_message(CommandResponse& response) {
     string msg = encoder.decode(response.raw());
+    std::cout << "encoded:" << msg << std::endl;
     int send_result = send(this->client_sfd, (void*) msg.c_str(), msg.length(), 0);
     if (send_result == -1) {
         perror("send");

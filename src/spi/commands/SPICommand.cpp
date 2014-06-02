@@ -64,6 +64,7 @@ CommandResponse PutLineCommand::run() {
 CommandResponse PutTextCommand::run() {
     std::string rest = get_rest();
     std::wstring endMarker = this->encoder->encode(rest);
+    std::cout << "Marker found" << std::endl;
     int collectedLinesCount = 0;
     while (true) {
         std::string inLine(this->spi->read_line());
@@ -71,13 +72,17 @@ CommandResponse PutTextCommand::run() {
         std::wstring line = this->encoder->encode(inLine);
         
         if (line.find(endMarker) != line.npos) {
+            std::cout << "Marker has been found!" << std::endl;
             break;
         } else {
             this->statistics->putLine(line);
             collectedLinesCount++;
+            std::cout << "line collected (" << collectedLinesCount << ")" << std::endl;
         }
     }
+    
     int totalLinesCount = this->statistics->getLinesCount();
+    std::cout << "Here" << std::endl;
     std::wstringstream wss;
     wss << collectedLinesCount << L" lines has been collected (" << totalLinesCount << L" total)";
     return * new CommandResponse(200, wss.str());

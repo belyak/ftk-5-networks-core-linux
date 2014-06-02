@@ -49,8 +49,7 @@ void start_console_mode() {
     spi->start();
 }
 
-void start_server_mode() {
-    int port = 18000;
+void start_server_mode(int port) {
     int server_sfd = -1;
     while (-1 == (server_sfd = create_server_socket(port, true))) {
         port++;
@@ -76,10 +75,16 @@ int main(int argc, char** argv) {
     } else if (argc == 2) {
         if (argv[1] == "--help") {
             void p_help();
-        } else if (strcmp(argv[1], "--xinetd") == 0) {
-            runMode = XINETD;
-        } else if (strcmp(argv[1], "--server") == 0) {
-            runMode = STANDALONE;
+        } 
+    } else if (argc == 3) {
+        if ((strcmp(argv[1], "--mode") == 0) || (strcmp(argv[1], "-m") == 0)) {
+            if (strcmp(argv[2], "xinetd") == 0) {
+                runMode = XINETD;
+            } else if (strcmp(argv[2], "standalone") == 0) {
+                runMode = STANDALONE;
+            } else {
+                p_incorrect_arguments();
+            }
         } else {
             p_incorrect_arguments();
         }
@@ -90,7 +95,7 @@ int main(int argc, char** argv) {
     if (runMode == XINETD) {
         start_console_mode();
     } else if (runMode == STANDALONE) {
-        start_server_mode();
+        start_server_mode(18000);
     }
     
     return 0;
