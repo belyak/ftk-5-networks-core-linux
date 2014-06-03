@@ -7,6 +7,7 @@
 #include <iostream>
 
 /**
+ * метод для создания серверного сокета, слушающего указанный TCP порт.
  * 
  * @param port порт для клиентских соединений
  * @param is_blocking блокирующий режим сокета
@@ -45,6 +46,3 @@ int create_server_socket(int port, bool is_blocking) {
 
 	return server_sfd;
 }
-
-
-

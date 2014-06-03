@@ -7,7 +7,7 @@
 #include "Statistics.h"
 #include "PersistentStatistics.h"
 
-PersistentStatistics::PersistentStatistics(std::wstring name, StatisticsMap & data){
+PersistentStatistics::PersistentStatistics(std::wstring name, StatisticsMap & data) {
     this->name = new std::wstring(name);
     this->data = (StatisticsMap*) &data;
 }

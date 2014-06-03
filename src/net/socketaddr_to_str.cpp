@@ -2,6 +2,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
+#include <string>
+#include <sstream>
 #include "netinet/in.h"
 
 #define ADDR_AND_PORT_STR_MAX_LEN (3+1)*4+5+1
@@ -23,7 +26,10 @@ char * sockaddr_str(const struct sockaddr & addr) {
 	address = (struct inet4_addr*) & address_lint;
 	memset((void *)buffer, 0, sizeof(buffer));
 
-	sprintf(buffer, "%d.%d.%d.%d:%d", address->b1, address->b2, address->b3, address->b4, port);
+    std::stringstream sb;
+    sb << (int)address->b1 << "." << (int)address->b2 << "." << (int)address->b3 << "." 
+            << (int)address->b4 << ":" << port;
+    strcpy(buffer, sb.str().c_str());
 	return buffer;
 }
 
