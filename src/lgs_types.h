@@ -9,5 +9,4 @@ typedef std::list<std::wstring> StringList;
 typedef std::map<std::wstring, unsigned int> StatisticsMap;
 typedef std::pair<std::wstring, unsigned int> StatisticsEntry;
 
-
 #endif
