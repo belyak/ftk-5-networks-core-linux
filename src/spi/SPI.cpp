@@ -4,14 +4,12 @@
 #include "commands/SPICommand.h"
 #include "commands/CommandResponse.h"
 
-#include <iostream>
-#include <string.h>
-
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>
 
-
+#include <iostream>
+#include <string.h>
 #include <map>
 #include <sstream>
 
@@ -106,14 +104,11 @@ void SPI::start() {
         std::string line(this->read_line());
             std::cout << "Got line: " << line << std::endl;
             std::string possible_command = this->first_word(line);
-            std::cout << "Possible command:`" << possible_command << "`" << std::endl;
 
             if (registered_commands.find(possible_command) != registered_commands.end()) {
                 SPICommand * command = registered_commands[possible_command];
-                std::cout << "going to run " << command->get_keyword() << std::endl;
                 command->set_current_line(line);
                 CommandResponse response = command->run();
-                std::cout << "got response" << std::endl;
                 this->send_message(response);
                 if (command->get_keyword() == std::string("exit")) {
                     exit_called = true;

@@ -3,6 +3,9 @@
 
 #include "../../encoder/Encoder.h"
 
+/**
+ * Базовый класс для всех команд, поддерживаемых сервером.
+ */
 class SPICommand {
 protected:
     CommandResponse* response;
@@ -16,13 +19,9 @@ protected:
 
 public:
     void init(Statistics & statistics, Encoder * encoder, SPI * spi, std::string keyword);
-
     std::string get_keyword();
-
     inline void prepare_response();
-
     virtual CommandResponse run();
-
     void set_current_line(std::string current_line);
 };
 
@@ -75,8 +74,12 @@ class SetTransferModeCommand: public SPICommand {
     CommandResponse run();
 };
 
+// Хэш, хранящий соответствие мнемоника команды (строка) -> экземпляр объекта команды
 typedef std::map<std::string, SPICommand*> RegisteredCommands;
 
+/**
+ * Метод, в котором происходит регистрация всех поддерживаемых сервером команд
+ */
 RegisteredCommands init_registered_commands(Statistics &, Encoder &, SPI *);
 
 #endif
