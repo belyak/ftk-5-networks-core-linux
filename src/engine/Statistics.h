@@ -6,13 +6,15 @@
 
 using std::wstring;
 
-
+/**
+ * Класс реализующий основную логику работы сервера с текстами.
+ */
 class Statistics {
 
     friend class PrintStatisticsCommand;
     
 protected:
-	wstring name;
+    wstring name;
     int words_count;
     int lines_count;
     PersistentStatistics * storage;
@@ -35,8 +37,6 @@ public:
     int getWordsCount() { return words_count; }
 
     void merge(Statistics &);
-    
-    void dumpLines();
 
     /* методы включенного объекта-хранилища: */
     void inline save(std::wstring name) { storage->store(name); }

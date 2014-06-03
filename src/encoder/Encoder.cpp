@@ -1,6 +1,5 @@
 #include "Encoder.h"
 
-
 bool Encoder::setEncoding(const char * encoding) {
     iconv_t new_descr_out = iconv_open(encoding, "WCHAR_T");
 
@@ -29,7 +28,8 @@ string Encoder::decode(wstring input_string) {
     char * result_to_out = result;
     size_t result_len = 2048 * sizeof(char);
 
-    size_t conversion_result = iconv(descr_out, (char **)&in_string, &in_string_length, (char**)&result, &result_len);
+    size_t conversion_result = iconv(descr_out, (char **)&in_string, 
+            &in_string_length, (char**)&result, &result_len);
 
     s_result = string(result_to_out);
 
@@ -47,7 +47,8 @@ wstring Encoder::encode(const string & input_string) {
     wchar_t * result_to_out = result;
     size_t result_len = 2048 * sizeof (wchar_t);
 
-    size_t conversion_result = iconv(descr_in, (char **)&in_string, &in_string_length, (char**)&result, &result_len);
+    size_t conversion_result = iconv(descr_in, (char **)&in_string, 
+            &in_string_length, (char**)&result, &result_len);
 
     w_result = wstring(result_to_out);
 

@@ -10,6 +10,9 @@ using std::wstring;
 using std::wcout;
 using std::endl;
 
+// алфавит из которого могу состоять слова обрабатываемых текстов.
+// на данный момент определен как спрочные и прописные символы латинского
+// и русского алфавитов и арабские цифры.
 const wstring * Statistics::LETTERS =
 		new wstring(L"ABCEDFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя1234567890");
 
@@ -65,12 +68,6 @@ void Statistics::calculate() {
 			putWord(word);
 		}
 	}
-
-	wcout << L"STATISTICS:" << endl;
-	for (StatisticsMap::iterator i = this->data.begin(); i != this->data.end(); i++) {
-		StatisticsEntry entry = *i;
-		wcout << entry.first << L": " << entry.second << endl;
-	}
 }
 
 void Statistics::merge(Statistics & anotherStatistics) {
@@ -80,13 +77,6 @@ void Statistics::merge(Statistics & anotherStatistics) {
         this->putWord(entry.first, entry.second);
     }
     return;
-}
-
-void Statistics::dumpLines() {
-	wcout << L"Current lines dump:" << endl;
-	for (StringList::iterator i = lines.begin(); i != lines.end(); i++) {
-		wcout << *i << endl;
-	}
 }
 
 bool Statistics::load(std::wstring name) {
