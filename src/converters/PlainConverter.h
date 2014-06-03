@@ -3,6 +3,9 @@
 
 #include "AbstractConverter.h"
 
+/**
+ * Конвертер не изменяющий сообщения при кодировании/декодировании
+ */
 class PlainConverter: public AbstractConverter {
 public:
     virtual unsigned char get_chunk_size() { return 1; }
