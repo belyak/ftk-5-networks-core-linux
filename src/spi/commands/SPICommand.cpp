@@ -35,20 +35,20 @@ void SPICommand::set_current_line(std::string current_line) {
     this->current_line = std::string(current_line);
 }
 
-CommandResponse SPICommand::run() {
-    return * new CommandResponse(200, L"Abstract response");  
+CommandResponse * SPICommand::run() {
+    return new CommandResponse(200, L"Abstract response");  
 }
 
 
-CommandResponse VersionCommand::run() { 
-    return * new CommandResponse(200, SERVER_VERSION);
+CommandResponse * VersionCommand::run() { 
+    return new CommandResponse(200, SERVER_VERSION);
 }
 
-CommandResponse ExitCommand::run() {
-    return * new CommandResponse(200, L"Good bye!");
+CommandResponse * ExitCommand::run() {
+    return new CommandResponse(200, L"Good bye!");
 }
 
-CommandResponse PutLineCommand::run() {
+CommandResponse * PutLineCommand::run() {
     std::string rest = get_rest();
     
     std::wstring line = this->encoder->encode(rest);
@@ -58,10 +58,10 @@ CommandResponse PutLineCommand::run() {
     int lCount = this->statistics->getLinesCount();
     std::wstringstream wss;
     wss << L"line has been collected (" << lCount << L" at the moment).";
-    return * new CommandResponse(200, wss.str());
+    return new CommandResponse(200, wss.str());
 }
 
-CommandResponse PutTextCommand::run() {
+CommandResponse * PutTextCommand::run() {
     std::string rest = get_rest();
     std::wstring endMarker = this->encoder->encode(rest);
     std::cout << "Marker found" << std::endl;
@@ -85,24 +85,24 @@ CommandResponse PutTextCommand::run() {
     std::cout << "Here" << std::endl;
     std::wstringstream wss;
     wss << collectedLinesCount << L" lines has been collected (" << totalLinesCount << L" total)";
-    return * new CommandResponse(200, wss.str());
+    return new CommandResponse(200, wss.str());
 }
 
-CommandResponse ClearBufferCommand::run() {
+CommandResponse * ClearBufferCommand::run() {
     this->statistics->clearBuffer();
-    return * new CommandResponse(200, L"Buffer has been cleared.");
+    return new CommandResponse(200, L"Buffer has been cleared.");
 }
 
-CommandResponse CalcCommand::run() {
+CommandResponse * CalcCommand::run() {
     this->statistics->calculate();
     std::wstringstream wss;
     int lCount = this->statistics->getLinesCount();
     int wCount = this->statistics->getWordsCount();
     wss << L"Calculated (" << lCount << L" lines, " << wCount << L" words)";
-    return * new CommandResponse(200, wss.str());
+    return new CommandResponse(200, wss.str());
 }
 
-CommandResponse SetEncodingCommand::run() {
+CommandResponse * SetEncodingCommand::run() {
     std::string encoding = get_rest();
     std::wstring w_encoding = std::wstring(encoding.begin(), encoding.end());
     
@@ -110,18 +110,18 @@ CommandResponse SetEncodingCommand::run() {
     std::wstringstream wss;
     if (setEncodingResult) {
         wss << L"Encoding has been changed to `" << w_encoding << "`";
-        return * new CommandResponse(200, wss.str());
+        return new CommandResponse(200, wss.str());
     } else {
         wss << L"Unable to find/set encoding`" << w_encoding << "`!!!";
-        return * new CommandResponse(404, wss.str());
+        return new CommandResponse(404, wss.str());
     }
 }
 
-CommandResponse SetTransferModeCommand::run() {
-    return * new CommandResponse(400, L"Not implemented in c++ version yet!");
+CommandResponse * SetTransferModeCommand::run() {
+    return new CommandResponse(400, L"Not implemented in c++ version yet!");
 }
 
-CommandResponse PrintStatisticsCommand::run() {
+CommandResponse * PrintStatisticsCommand::run() {
     StatisticsMap & statistics_map = this->statistics->data;
     unsigned int lines_count = statistics_map.size();
     if (lines_count > 1) {
@@ -134,24 +134,24 @@ CommandResponse PrintStatisticsCommand::run() {
             lines[i] = wss.str();
             i++;
         }
-        return * new CommandResponse(200, lines, lines_count);
+        return new CommandResponse(200, lines, lines_count);
     } else if (lines_count == 1) {
         std::wstringstream wss;
         StatisticsEntry entry = *statistics_map.begin();
         wss << entry.first << L" " << entry.second;
-        return * new CommandResponse(200, wss.str());
+        return new CommandResponse(200, wss.str());
     } else { // lines_count == 0
-        return * new CommandResponse(200, L"");
+        return new CommandResponse(200, L"");
     }
 }
 
 
-CommandResponse SaveCommand::run() {
+CommandResponse * SaveCommand::run() {
     std::string rest = get_rest();
     std::wstring name = encoder->encode(rest);
     
     if (name.length() == 0) {
-        return * new CommandResponse(400, L"You should provide name");
+        return new CommandResponse(400, L"You should provide name");
     }
     
     this->statistics->save(name);
@@ -159,15 +159,15 @@ CommandResponse SaveCommand::run() {
     std::wstringstream wss;
     wss << L"Statistics \"" << name << L"\" has been saved";
     
-    return * new CommandResponse(200, wss.str());
+    return new CommandResponse(200, wss.str());
 }
 
-CommandResponse LoadCommand::run() {
+CommandResponse * LoadCommand::run() {
     std::string rest = get_rest();
     std::wstring name = encoder->encode(rest);
     
     if (name.length() == 0) {
-        return * new CommandResponse(400, L"You should provide name!!!");
+        return new CommandResponse(400, L"You should provide name!!!");
     }
     
     bool isLoaded = this->statistics->load(name);
@@ -175,22 +175,22 @@ CommandResponse LoadCommand::run() {
     std::wstringstream wss;
     if (isLoaded) {
         wss << L"Statistics \"" << name << L"\" has been loaded.";
-        return * new CommandResponse(200, wss.str());
+        return new CommandResponse(200, wss.str());
     } else {
         wss << L"Statistics \"" << name << L"\" has not been loaded!!!";
-        return * new CommandResponse(404, wss.str());
+        return new CommandResponse(404, wss.str());
     }
 }
 
 
-CommandResponse MergeCommand::run() {
+CommandResponse * MergeCommand::run() {
     std::string rest = get_rest();
     std::wstring name = encoder->encode(rest);
     std::wstringstream wss;
     
     
     if (name.length() == 0) {
-        return * new CommandResponse(400, L"You should provide name!!!");
+        return new CommandResponse(400, L"You should provide name!!!");
     }
     
     Statistics anotherStatistics(L"Another");
@@ -198,11 +198,11 @@ CommandResponse MergeCommand::run() {
     
     if (!isLoaded) {
         wss << L"Statistics \"" << name << L"\" has not been loaded!!!";
-        return * new CommandResponse(404, wss.str());
+        return new CommandResponse(404, wss.str());
     } else {
         this->statistics->merge(anotherStatistics);
         wss << L"Statistics \"" << name << L"\" has been merge into current";
-        return * new CommandResponse(200, wss.str());
+        return new CommandResponse(200, wss.str());
     }
 }
 

@@ -108,8 +108,9 @@ void SPI::start() {
             if (registered_commands.find(possible_command) != registered_commands.end()) {
                 SPICommand * command = registered_commands[possible_command];
                 command->set_current_line(line);
-                CommandResponse response = command->run();
-                this->send_message(response);
+                CommandResponse * response = command->run();
+                this->send_message(*response);
+                delete response;
                 if (command->get_keyword() == std::string("exit")) {
                     exit_called = true;
                 }

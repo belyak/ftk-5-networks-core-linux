@@ -21,57 +21,57 @@ public:
     void init(Statistics & statistics, Encoder * encoder, SPI * spi, std::string keyword);
     std::string get_keyword();
     inline void prepare_response();
-    virtual CommandResponse run();
+    virtual CommandResponse * run();
     void set_current_line(std::string current_line);
 };
 
 class VersionCommand : public SPICommand {
 public:
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class ExitCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class PutLineCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class PutTextCommand: public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class ClearBufferCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class CalcCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class PrintStatisticsCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class SaveCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class LoadCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class MergeCommand : public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class SetEncodingCommand: public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 class SetTransferModeCommand: public SPICommand {
-    CommandResponse run();
+    CommandResponse * run();
 };
 
 // Хэш, хранящий соответствие мнемоника команды (строка) -> экземпляр объекта команды

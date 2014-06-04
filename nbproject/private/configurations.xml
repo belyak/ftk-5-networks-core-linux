@@ -43,7 +43,6 @@
         </loadobjs>
       </dbxrtc>
       <gizmo_options version="3">
-        <configurationname>GizmoSimple</configurationname>
       </gizmo_options>
       <nativedebugger version="1">
         <engine>dbx</engine>
@@ -105,7 +104,6 @@
         </loadobjs>
       </dbxrtc>
       <gizmo_options version="3">
-        <configurationname>GizmoSimple</configurationname>
       </gizmo_options>
       <nativedebugger version="1">
         <engine>dbx</engine>
